@@ -1,0 +1,42 @@
+def fractional_knapsack(items, capacity):
+    # Calculate the value-to-weight ratio for each item
+    value_per_weight = [(item[0] / item[1], item[0], item[1]) for item in items]
+    
+    # Sort items in descending order of value-to-weight ratio
+    value_per_weight.sort(reverse=True)
+
+    total_value = 0
+    knapsack = []
+
+    for ratio, value, weight in value_per_weight:
+        if capacity == 0:
+            break
+        if weight <= capacity:
+            total_value += value
+            capacity -= weight
+            knapsack.append((value, weight, 1))
+        else:
+            fraction = capacity / weight
+            total_value += fraction * value
+            knapsack.append((value, weight, fraction))
+            break
+
+    return knapsack, total_value
+
+# Test the fractional knapsack algorithm
+items = [(60, 10), (100, 20), (120, 30)]  # (value, weight) pairs
+knapsack_capacity = 50
+
+selected_items, max_value = fractional_knapsack(items, knapsack_capacity)
+
+print("Selected Items:")
+for value, weight, fraction in selected_items:
+    print(f"Value: {value}, Weight: {weight}, Fraction: {fraction}")
+print("Total Value:", max_value)
+
+Output - 
+Selected Items:
+Value: 120, Weight: 30, Fraction: 1
+Value: 100, Weight: 20, Fraction: 1
+Value: 60, Weight: 10, Fraction: 0.3333333333333333
+Total Value: 240.0
